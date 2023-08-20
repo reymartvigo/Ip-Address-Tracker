@@ -1,10 +1,12 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 
 import mobileBg from './assets/pattern-bg-mobile.png';
 import desktopBg from './assets/pattern-bg-desktop.png';
+import iconMarker from './assets/icon-location.svg';
 
 import SearchBar from './components/SearcBar';
 import IpInformation from "./components/IpInformation";
+
 
 
 import L from 'leaflet';
@@ -12,8 +14,7 @@ import 'leaflet/dist/leaflet.css';
 function App() {
 
   const [ipData, setIpData] = useState({})
-  // const mapRef = useRef(null)
-  // const mapInitialized = useRef(false);
+
   const ipGeolocationToken = "at_ol9EF0yZuuQxOtjDOmz8S96y8Rf5V"
 
   const handleFindAddress = async (ipAddress) => {
@@ -62,10 +63,15 @@ function App() {
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map)
+    }).addTo(map);
 
+    const customIcon = L.icon({
+      iconUrl: iconMarker,
+      iconSize: [25, 30],
+      iconAnchor: [16, 32],
+    });
 
-    L.marker([lat, lng]).addTo(map)
+    L.marker([lat, lng], { icon: customIcon }).addTo(map)
       .openPopup();
   }, [ipData.location]);
 
@@ -75,9 +81,9 @@ function App() {
   return (
     <>
       <div className="main-wrapper relative h-screen">
-        <div className="h-auto">
-          <img className="w-full" src={mobileBg} alt="" aria-hidden="true" />
-          <img className="w-full sm:hidden " src={desktopBg} alt="" aria-hidden="true" />
+        <div className="sm:h-auto">
+          <img className="sm:w-full md:h-72 lg:hidden " src={mobileBg} alt="" aria-hidden="true" />
+          <img className="sm:w-full sm:hidden lg:flex" src={desktopBg} alt="" aria-hidden="true" />
         </div>
 
         <div className=" sm: absolute sm:top-0 sm: w-full sm:flex sm: flex-col sm:items-center z-10 ">
@@ -95,7 +101,7 @@ function App() {
         </div>
 
 
-        <div className="sm:h-full w-screen relative z-0" id="map"></div>
+        <div className="sm:h-full w-full relative z-0" id="map"></div>
 
 
       </div>
